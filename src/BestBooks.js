@@ -1,16 +1,9 @@
 import React from 'react';
 
-class BestBooks extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      books: []
-    }
-  }
+function BestBooks (){
 
   /* TODO: Make a GET request to your API to fetch all the books from the database  */
 
-  render() {
 
     /* TODO: render all the books in a Carousel */
 
@@ -26,6 +19,4 @@ class BestBooks extends React.Component {
       </>
     )
   }
-}
-
 export default BestBooks;
