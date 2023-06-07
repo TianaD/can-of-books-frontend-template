@@ -52,7 +52,6 @@ function BestBooks() {
       });
 
       console.log(response.data)
-      // Set the books state with the response data
       setBooks(response.data);
     }
     // TODO: Be sure your front end will handle any errors, in case something goes wrong.
@@ -65,14 +64,16 @@ function BestBooks() {
   // TODO: use Axios to send a POST request to /book's endpoint ; the server should respond with the new book that was successfully saved : then, pass BestBooks component, save to state to allow React to re-render list of all books
   let handleBookSubmit = async (book) => {
     try {
-      const token = await getAccessTokenSilently();
-      // Make a POST request to the /books endpoint
+      const token = await getAccessTokenSilently({
+        audience: 'https://canobooks.onrender.com/api',
+        scope: 'openid profile email'
+      });
+      // POST request to the /books endpoint
       const response = await axios.post('https://canobooks.onrender.com/books', book, {
         headers: {
           authorization: `Bearer ${token}`,
         },
       });
-      // Fetch the updated list of books
       if (response.status === 200) {
         // call fetchBooks() to update books list after delete
         fetchBooks();
@@ -87,7 +88,10 @@ function BestBooks() {
 
   const handleBookUpdate = async (updatedBook, bookId) => {
     try {
-      const token = await getAccessTokenSilently();
+      const token = await getAccessTokenSilently({
+        audience: 'https://canobooks.onrender.com/api',
+        scope: 'openid profile email'
+      });
       const response = await axios.put(`https://canobooks.onrender.com/books/${bookId}`, updatedBook, {
         headers: {
           authorization: `Bearer ${token}`,
@@ -105,7 +109,10 @@ function BestBooks() {
 
   const handleBookDelete = async (bookId) => {
     try {
-      const token = await getAccessTokenSilently();
+      const token = await getAccessTokenSilently({
+        audience: 'https://canobooks.onrender.com/api',
+        scope: 'openid profile email'
+      });
       // Making the DELETE request to the server
       await axios.delete(`https://canobooks.onrender.com/books/${bookId}`, {
         headers: {
@@ -143,8 +150,8 @@ function BestBooks() {
         <Carousel.Caption>
           <h1>{books.title}</h1>
           <p>{books.description}</p>
-          
-                  <Button variant="secondary" onClick={() =>handleBookEdit(books._id)}>Edit</Button>
+
+          {/* <Button variant="secondary" onClick={() => handleBookEdit(books._id)}>Edit</Button> */}
 
           {/* <Button style={{ marginRight: '10px' }} variant="danger" onClick={() => handleBookDelete(books._id)}>Delete</Button> */}
           <EditBookModal book={books} onBookUpdate={handleBookUpdate} bookId={books._id} />
