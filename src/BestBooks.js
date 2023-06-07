@@ -2,9 +2,19 @@ import axios from 'axios';
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { Carousel } from 'react-bootstrap';
+import { Button } from 'bootstrap';
+import BookFormModal from './BookFormModal';
+import EditBookModal from './EditBookModal';
+import { useAuth0 } from '@auth0/auth0-react';
+
 
 function BestBooks() {
   const [books, setBooks] = useState([]);
+  const { getAccessTokenSilently } = useAuth0();
+  useEffect(() => {
+    fetchBooks();
+  }, [])
+
 
   useEffect(function () {
     if (books.length === 0) {
@@ -19,13 +29,107 @@ function BestBooks() {
     }
 
   })
+
+  let handleBookEdit = async () => {
+
+  }
+
+
+
+
+
+  // Function to fetch books from the server
+  const fetchBooks = async () => {
+
+    try {
+      const token = await getAccessTokenSilently();
+      console.log(token);
+      // Make a GET request to the /books endpoint
+      const response = await axios.get('https://canobooks.onrender.com/books', {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log(response.data)
+      // Set the books state with the response data
+      setBooks(response.data);
+    }
+    // TODO: Be sure your front end will handle any errors, in case something goes wrong.
+    catch (error) {
+      console.log(error);
+    }
+
+  };
+
+  // TODO: use Axios to send a POST request to /book's endpoint ; the server should respond with the new book that was successfully saved : then, pass BestBooks component, save to state to allow React to re-render list of all books
+  let handleBookSubmit = async (book) => {
+    try {
+      const token = await getAccessTokenSilently();
+      // Make a POST request to the /books endpoint
+      const response = await axios.post('https://canobooks.onrender.com/books', book, {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
+      // Fetch the updated list of books
+      if (response.status === 200) {
+        // call fetchBooks() to update books list after delete
+        fetchBooks();
+
+      }
+    }
+    // TODO: Be sure your front end will handle any errors, in case something goes wrong.
+    catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleBookUpdate = async (updatedBook, bookId) => {
+    try {
+      const token = await getAccessTokenSilently();
+      const response = await axios.put(`https://canobooks.onrender.com/books/${bookId}`, updatedBook, {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.status === 200) {
+        fetchBooks();
+      }
+    }
+    // TODO: Be sure your front end will handle any errors, in case something goes wrong.
+    catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleBookDelete = async (bookId) => {
+    try {
+      const token = await getAccessTokenSilently();
+      // Making the DELETE request to the server
+      await axios.delete(`https://canobooks.onrender.com/books/${bookId}`, {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(books)
+      // If the delete is successful, call `fetchBooks` again to get the updated list
+      fetchBooks();
+
+    }
+    // TODO: Be sure your front end will handle any errors, in case something goes wrong.
+    catch (error) {
+      console.log(error);
+    }
+  };
+
   let booksHTML = books.map(function (element) {
     return (
       <Carousel.Item>
         <img
           className="d-block w-100"
-          src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22800%22%20height%3D%22400%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20800%20400%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1887da7b565%20text%20%7B%20fill%3A%23ffffff%3Bfont-weight%3Anormal%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A40pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1887da7b565%22%3E%3Crect%20width%3D%22800%22%20height%3D%22400%22%20fill%3D%22%23373940%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22285.9140625%22%20y%3D%22217.7%22%3EFirst%20slide%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
-          alt="First slide"
+          src="https://img.freepik.com/free-photo/abstract-uv-ultraviolet-light-composition_23-2149243965.jpg?w=826&t=st=1686069372~exp=1686069972~hmac=afc30a6de9c41fa39d2a8911f2442e18a93f5b719f23b067e3125e240ad5fb9b"
+          alt="Slide"
         />
         <Carousel.Caption>
           {element.title}
@@ -37,12 +141,17 @@ function BestBooks() {
     booksHTML = (
       <Carousel.Item>
         <Carousel.Caption>
-          <h2>Error: No Books Found</h2>
+          <h1>{books.title}</h1>
+          <p>{books.description}</p>
+          
+                  <Button variant="secondary" onClick={() =>handleBookEdit(books._id)}>Edit</Button>
+
+          {/* <Button style={{ marginRight: '10px' }} variant="danger" onClick={() => handleBookDelete(books._id)}>Delete</Button> */}
+          <EditBookModal book={books} onBookUpdate={handleBookUpdate} bookId={books._id} />
+
         </Carousel.Caption>
       </Carousel.Item>)
   }
-
-  /* TODO: render all the books in a Carousel */
 
   return (
     <>
@@ -53,13 +162,19 @@ function BestBooks() {
       ) : (
         <h3>No Books Found :(</h3>
       )}
+      <BookFormModal bookSubmit={handleBookSubmit} style={{}} />
+
       <Carousel>
 
         {booksHTML}
 
       </Carousel>
 
+      {Button}
     </>
+
+
+
   )
 }
 export default BestBooks;
