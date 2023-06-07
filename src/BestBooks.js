@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { Carousel } from 'react-bootstrap';
-import { Button } from 'bootstrap';
+import { Button } from 'react-bootstrap';
 import BookFormModal from './BookFormModal';
 import EditBookModal from './EditBookModal';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -150,7 +150,7 @@ function BestBooks() {
 
           {/* <Button variant="secondary" onClick={() => handleBookEdit(books._id)}>Edit</Button> */}
 
-          {/* <Button variant="danger" onClick={() => handleBookDelete(books._id)}>Delete</Button> */}
+          <Button variant="danger" onClick={() => handleBookDelete(books._id)}>Delete</Button>
           <EditBookModal book={books} onBookUpdate={handleBookUpdate} bookId={books._id} />
 
         </Carousel.Caption>
@@ -166,7 +166,7 @@ function BestBooks() {
       ) : (
         <h3>No Books Found :(</h3>
       )} */}
-      <BookFormModal bookSubmit={handleBookSubmit} style={{}} />
+      <BookFormModal onBookSubmit={handleBookSubmit} style={{}} />
 
       <Carousel>
 
@@ -174,7 +174,7 @@ function BestBooks() {
 
       </Carousel>
 
-      {Button}
+      {/* {Button} */}
 
     </>
 
