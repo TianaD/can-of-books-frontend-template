@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useState } from "react";
 
-function BooksModal({ onBookSubmit, bookId, ...props }) {
+function BooksModal({ onBookSubmit, bookId }) {
 
     const [show, setShow] = useState(false); // Show/Hide the Modal
     const [status, setStatus] = useState('Pending'); // Book Status 

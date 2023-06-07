@@ -19,10 +19,10 @@ function BestBooks() {
   useEffect(function () {
     if (books.length === 0) {
       /* TODO: Make a GET request to your API to fetch all the books from the database  */
-      let response = axios.get('https://canobooks.onrender.com/books')
+      let response = axios.get('http://localhost:3000/books')
       response.then((res) => {
         console.log(res.data)
-        // storing returned array of books in useState variable: books
+        // holds returned array of books in useState variable: books
         setBooks(res.data)
       })
       console.log(response)
@@ -30,12 +30,9 @@ function BestBooks() {
 
   })
 
-  let handleBookEdit = async () => {
+  // let handleBookEdit = async () => {
 
-  }
-
-
-
+  // }
 
 
   // Function to fetch books from the server
@@ -45,7 +42,7 @@ function BestBooks() {
       const token = await getAccessTokenSilently();
       console.log(token);
       // Make a GET request to the /books endpoint
-      const response = await axios.get('https://canobooks.onrender.com/books', {
+      const response = await axios.get('http://localhost:3000/books', {
         headers: {
           authorization: `Bearer ${token}`,
         },
@@ -69,7 +66,7 @@ function BestBooks() {
         scope: 'openid profile email'
       });
       // POST request to the /books endpoint
-      const response = await axios.post('https://canobooks.onrender.com/books', book, {
+      const response = await axios.post('http://localhost:3000/books', book, {
         headers: {
           authorization: `Bearer ${token}`,
         },
@@ -92,7 +89,7 @@ function BestBooks() {
         audience: 'https://canobooks.onrender.com/api',
         scope: 'openid profile email'
       });
-      const response = await axios.put(`https://canobooks.onrender.com/books/${bookId}`, updatedBook, {
+      const response = await axios.put(`http://localhost:3000/books/${bookId}`, updatedBook, {
         headers: {
           authorization: `Bearer ${token}`,
         },
@@ -114,7 +111,7 @@ function BestBooks() {
         scope: 'openid profile email'
       });
       // Making the DELETE request to the server
-      await axios.delete(`https://canobooks.onrender.com/books/${bookId}`, {
+      await axios.delete(`http://localhost:3000/books/${bookId}`, {
         headers: {
           authorization: `Bearer ${token}`,
         },
@@ -153,7 +150,7 @@ function BestBooks() {
 
           {/* <Button variant="secondary" onClick={() => handleBookEdit(books._id)}>Edit</Button> */}
 
-          {/* <Button style={{ marginRight: '10px' }} variant="danger" onClick={() => handleBookDelete(books._id)}>Delete</Button> */}
+          {/* <Button variant="danger" onClick={() => handleBookDelete(books._id)}>Delete</Button> */}
           <EditBookModal book={books} onBookUpdate={handleBookUpdate} bookId={books._id} />
 
         </Carousel.Caption>
@@ -162,13 +159,13 @@ function BestBooks() {
 
   return (
     <>
-      <h2>My Essential Lifelong Learning &amp; Formation Shelf</h2>
+      <h2>Personal Bookshelf</h2>
 
-      {books.length ? (
+      {/* {books.length ? (
         <p>Book Carousel coming soon</p>
       ) : (
         <h3>No Books Found :(</h3>
-      )}
+      )} */}
       <BookFormModal bookSubmit={handleBookSubmit} style={{}} />
 
       <Carousel>
@@ -178,6 +175,7 @@ function BestBooks() {
       </Carousel>
 
       {Button}
+
     </>
 
 
