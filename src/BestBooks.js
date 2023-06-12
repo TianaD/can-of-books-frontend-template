@@ -89,7 +89,7 @@ function BestBooks() {
         audience: 'https://canobooks.onrender.com/api',
         scope: 'openid profile email'
       });
-      const response = await axios.put(`http://localhost:3000/books/${bookId}`, updatedBook, {
+      const response = await axios.put(`https://canobooks.onrender.com/books/${bookId}`, updatedBook, {
         headers: {
           authorization: `Bearer ${token}`,
         },
@@ -111,7 +111,7 @@ function BestBooks() {
         scope: 'openid profile email'
       });
       // Making the DELETE request to the server
-      await axios.delete(`http://localhost:3000/books/${bookId}`, {
+      await axios.delete(`https://canobooks.onrender.com/books/${bookId}`, {
         headers: {
           authorization: `Bearer ${token}`,
         },
