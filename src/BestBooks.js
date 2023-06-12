@@ -19,7 +19,7 @@ function BestBooks() {
   useEffect(function () {
     if (books.length === 0) {
       /* TODO: Make a GET request to your API to fetch all the books from the database  */
-      let response = axios.get('http://localhost:3000/books')
+      let response = axios.get('https://canobooks.onrender.com/books')
       response.then((res) => {
         console.log(res.data)
         // holds returned array of books in useState variable: books
@@ -42,7 +42,7 @@ function BestBooks() {
       const token = await getAccessTokenSilently();
       console.log(token);
       // Make a GET request to the /books endpoint
-      const response = await axios.get('http://localhost:3000/books', {
+      const response = await axios.get('https://canobooks.onrender.com/books', {
         headers: {
           authorization: `Bearer ${token}`,
         },
@@ -66,7 +66,7 @@ function BestBooks() {
         scope: 'openid profile email'
       });
       // POST request to the /books endpoint
-      const response = await axios.post('http://localhost:3000/books', book, {
+      const response = await axios.post('https://canobooks.onrender.com/books', book, {
         headers: {
           authorization: `Bearer ${token}`,
         },
