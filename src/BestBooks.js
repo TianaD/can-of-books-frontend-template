@@ -11,15 +11,19 @@ import { useAuth0 } from '@auth0/auth0-react';
 function BestBooks() {
   const [books, setBooks] = useState([]);
   const { getAccessTokenSilently } = useAuth0();
-  useEffect(() => {
-    fetchBooks();
-  }, [])
 
 
-  useEffect(function () {
+
+  const useEffect = async () => {
     if (books.length === 0) {
       /* TODO: Make a GET request to your API to fetch all the books from the database  */
-      let response = axios.get('https://canobooks.onrender.com/books')
+      const token = await getAccessTokenSilently();
+
+      let response = axios.get('https://canobooks.onrender.com/books', {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      })
       response.then((res) => {
         console.log(res.data)
         // holds returned array of books in useState variable: books
@@ -28,8 +32,14 @@ function BestBooks() {
       console.log(response)
     }
 
-  })
+  }
 
+  
+  useEffect(() => {
+    fetchBooks();
+  }, [])
+
+  
   // let handleBookEdit = async () => {
 
   // }
@@ -85,10 +95,7 @@ function BestBooks() {
 
   const handleBookUpdate = async (updatedBook, bookId) => {
     try {
-      const token = await getAccessTokenSilently({
-        audience: 'https://canobooks.onrender.com/api',
-        scope: 'openid profile email'
-      });
+      const token = await getAccessTokenSilently();
       const response = await axios.put(`https://canobooks.onrender.com/books/${bookId}`, updatedBook, {
         headers: {
           authorization: `Bearer ${token}`,
@@ -137,7 +144,10 @@ function BestBooks() {
         />
         <Carousel.Caption>
           {element.title}
+          <Button variant="danger" onClick={() => handleBookDelete(element._id)}>Delete</Button>
+
         </Carousel.Caption>
+
       </Carousel.Item>
     )
   })

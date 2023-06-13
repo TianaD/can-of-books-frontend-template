@@ -9,10 +9,9 @@ root.render(
   <React.StrictMode>
 
     <Auth0Provider
-      domain="dev-m12a6dyw8qu7lgb7.us.auth0.com"
-      clientId="YkuqfCMmrTbgecFeTtdPaOptOsizc7I4"
+      domain="dev-4q522vtnef6mae4q.us.auth0.com"
+      clientId="n5S5Uk75zZobqgG9HzF8dCx1dRWBwBRA"
       audience="https://canofbooks/api"
-      scope="openid profile email"
       //  redirect_uri={window.location.origin}
       authorizationParams={{
         redirect_uri: window.location.origin
@@ -20,7 +19,7 @@ root.render(
     >
 
       <App />
-      </Auth0Provider>
+    </Auth0Provider>
 
   </React.StrictMode>
 );
