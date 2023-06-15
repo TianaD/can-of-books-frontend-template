@@ -10,40 +10,30 @@ import { useAuth0 } from '@auth0/auth0-react';
 
 function BestBooks() {
   const [books, setBooks] = useState([]);
+  const [editBookData, setEditBookData] = useState({ id: "", title: "", description: "" });
+  const  [openBookModal, setOpenBookModal] = useState(false)
   const { getAccessTokenSilently } = useAuth0();
+  useEffect(() => {
+    //console.log('before fetch')
+    fetchBooks();
+    //console.log('after fetch')
+  }, [])
 
 
-
-  const useEffect = async () => {
+  useEffect(function () {
     if (books.length === 0) {
       /* TODO: Make a GET request to your API to fetch all the books from the database  */
-      const token = await getAccessTokenSilently();
-
-      let response = axios.get('https://canobooks.onrender.com/books', {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      })
+      let response = axios.get('http://localhost:3001/books')
       response.then((res) => {
         console.log(res.data)
         // holds returned array of books in useState variable: books
         setBooks(res.data)
+        setEditBookData(res.data)
       })
       console.log(response)
     }
 
-  }
-
-  
-  useEffect(() => {
-    fetchBooks();
-  }, [])
-
-  
-  // let handleBookEdit = async () => {
-
-  // }
-
+  })
 
   // Function to fetch books from the server
   const fetchBooks = async () => {
@@ -52,10 +42,10 @@ function BestBooks() {
       const token = await getAccessTokenSilently();
       console.log(token);
       // Make a GET request to the /books endpoint
-      const response = await axios.get('https://canobooks.onrender.com/books', {
+      const response = await axios.get('http://localhost:3001/books', {
         headers: {
           authorization: `Bearer ${token}`,
-        },
+        }
       });
 
       console.log(response.data)
@@ -72,11 +62,9 @@ function BestBooks() {
   let handleBookSubmit = async (book) => {
     try {
       const token = await getAccessTokenSilently({
-        audience: 'https://canobooks.onrender.com/api',
-        scope: 'openid profile email'
       });
       // POST request to the /books endpoint
-      const response = await axios.post('https://canobooks.onrender.com/books', book, {
+      const response = await axios.post('http://localhost:3001/books', book, {
         headers: {
           authorization: `Bearer ${token}`,
         },
@@ -93,32 +81,57 @@ function BestBooks() {
     }
   };
 
+  let handleBookEdit = async (editBookData, bookId) => {
+    setOpenBookModal(true)
+    // console.log("Yoooo")
+    // try {
+    //   const token = await getAccessTokenSilently({
+    //   });
+    //   console.log(token)
+    //   const response = await axios.put(`http://localhost:3001/books/${bookId}`, editBookData, {
+    //     headers: {
+    //       authorization: `Bearer ${token}`,
+    //     }
+    //   });
+    //   console.log(response.data)
+    //   setBooks(response.data);
+    //   setEditBookData(response.data);
+    // }
+    // // TODO: Be sure your front end will handle any errors, in case something goes wrong.
+    // catch (error) {
+    //   console.log(error);
+    // }
+  };
+
   const handleBookUpdate = async (updatedBook, bookId) => {
-    try {
-      const token = await getAccessTokenSilently();
-      const response = await axios.put(`https://canobooks.onrender.com/books/${bookId}`, updatedBook, {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.status === 200) {
-        fetchBooks();
-      }
-    }
-    // TODO: Be sure your front end will handle any errors, in case something goes wrong.
-    catch (error) {
-      console.log(error);
-    }
+    setOpenBookModal(true)
+
+    // try {
+    //   const token = await getAccessTokenSilently({
+         
+    //   });
+    //   const response = await axios.pet(`http://localhost:3001/books/${bookId}`, updatedBook, {
+    //     headers: {
+    //       authorization: `Bearer ${token}`,
+    //     },
+    //   });
+    //   if (response.status === 200) {
+    //     fetchBooks();
+    //   }
+    // }
+    // // TODO: Be sure your front end will handle any errors, in case something goes wrong.
+    // catch (error) {
+    //   console.log(error);
+    // }
   };
 
   const handleBookDelete = async (bookId) => {
     try {
       const token = await getAccessTokenSilently({
-        audience: 'https://canobooks.onrender.com/api',
-        scope: 'openid profile email'
+         
       });
       // Making the DELETE request to the server
-      await axios.delete(`https://canobooks.onrender.com/books/${bookId}`, {
+      await axios.delete(`http://localhost:3001/books/${bookId}`, {
         headers: {
           authorization: `Bearer ${token}`,
         },
@@ -145,23 +158,22 @@ function BestBooks() {
         <Carousel.Caption>
           {element.title}
           <Button variant="danger" onClick={() => handleBookDelete(element._id)}>Delete</Button>
+          <Button variant="secondary" onClick={() => handleBookEdit(element._id)}>Edit</Button>
 
         </Carousel.Caption>
 
       </Carousel.Item>
     )
   })
-  if (books.length === 0) {
+  if (books.length == 0) {
     booksHTML = (
       <Carousel.Item>
         <Carousel.Caption>
           <h1>{books.title}</h1>
           <p>{books.description}</p>
 
-          {/* <Button variant="secondary" onClick={() => handleBookEdit(books._id)}>Edit</Button> */}
-
-          <Button variant="danger" onClick={() => handleBookDelete(books._id)}>Delete</Button>
-          <EditBookModal book={books} onBookUpdate={handleBookUpdate} bookId={books._id} />
+          <Button variant="danger" onClick={() => {handleBookDelete(books._id)}}>Delete</Button>
+          <Button variant="secondary" onClick={() => {handleBookEdit(books._id)}}>Edit</Button>
 
         </Carousel.Caption>
       </Carousel.Item>)
@@ -177,6 +189,8 @@ function BestBooks() {
         <h3>No Books Found :(</h3>
       )} */}
       <BookFormModal onBookSubmit={handleBookSubmit} style={{}} />
+      <BookFormModal onBookSubmit={handleBookEdit} style={{}} />
+      <EditBookModal openBookModal={openBookModal} setOpenBookModal={setOpenBookModal} book={books} onBookUpdate={handleBookUpdate} bookId={books._id} />
 
       <Carousel>
 

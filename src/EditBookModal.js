@@ -2,16 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 
 //book prop -- book obj to be updated, nookUpdate --function called when the book is to be updated
-export default function EditBookModal({ book, onBookUpdate }) {
+export default function EditBookModal({ book, onBookUpdate, openBookModal, setOpenBookModal}) {
     const [show, setShow] = useState(false); // For toggling the Modal
     const [title, setTitle] = useState(book.title); //To hold the title of the book
     const [description, setDescription] = useState(book.description); // To hold the description of the book
     const [status, setStatus] = useState(book.status); // To hold the status of the book
 
     //updates the modal display
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
+    const handleClose = () => setOpenBookModal(false);
+    const handleShow = () => setOpenBookModal(true);
+    console.log(openBookModal)
     //after form is submitted, handleBookUpdate function runs
     const handleBookUpdate = (e) => {
         e.preventDefault();
@@ -27,13 +27,15 @@ export default function EditBookModal({ book, onBookUpdate }) {
         setDescription(book.description);
         setStatus(book.status);
     }, [book]);
+
+    
     return (
         <>
             <Button variant="secondary" onClick={handleShow}>
                 Edit Book
             </Button>
 
-            <Modal show={show} onHide={handleClose} animation={false}>
+            <Modal show={openBookModal} onHide={handleClose} animation={false}>
                 <Modal.Header closeButton>
                     <Modal.Title>Edit A Book!</Modal.Title>
                 </Modal.Header>

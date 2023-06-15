@@ -26,7 +26,7 @@ function BooksModal({ onBookSubmit, bookId }) {
                 scope: 'openid profile email'
               });
             // After new book is added, POST request is sent to server
-            const response = await axios.post('https://canobooks.onrender.com/books/', addedBook, {
+            const response = await axios.post('http://localhost:3001/books/', addedBook, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

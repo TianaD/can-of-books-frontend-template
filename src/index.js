@@ -10,8 +10,8 @@ root.render(
 
     <Auth0Provider
       domain="dev-4q522vtnef6mae4q.us.auth0.com"
-      clientId="n5S5Uk75zZobqgG9HzF8dCx1dRWBwBRA"
-      audience="https://canofbooks/api"
+      clientId="tIBFQHEI0oB5Czu1mCZbqvHPIQbcW64Q"
+      // audience="https://canofbooks/api"
       //  redirect_uri={window.location.origin}
       authorizationParams={{
         redirect_uri: window.location.origin
