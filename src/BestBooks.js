@@ -103,14 +103,15 @@ function BestBooks() {
     // }
   };
 
-  const handleBookUpdate = async (updatedBook, bookId) => {
+  const handleBookUpdate = async (bookId , updatedBook ) => {
     setOpenBookModal(true)
 
     // try {
     //   const token = await getAccessTokenSilently({
-         
     //   });
-    //   const response = await axios.pet(`http://localhost:3001/books/${bookId}`, updatedBook, {
+    //   console.log(bookId)
+    //   console.log(updatedBook)
+    //   const response = await axios.put(`http://localhost:3001/books/${bookId}`, updatedBook, {
     //     headers: {
     //       authorization: `Bearer ${token}`,
     //     },
